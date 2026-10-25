@@ -21,6 +21,12 @@ public class ApiController {
    if(method.equals("GET")){String id=req.getParameter("id");if(id!=null)b.put("id",id);}
    return db.transaction(c->{
     if(method.equals("POST")&&path.equals("/api/login"))return json(200,auth.login(c,b,req.getRemoteAddr()));
+    if (method.equals("POST") && path.equals("/api/register")) {
+    return json(
+            201,
+            auth.register(c, b, req.getRemoteAddr())
+    );
+}
     var u=auth.user(c,authorization);
     if(method.equals("POST")&&path.equals("/api/logout")){auth.logout(authorization);return json(200,msg("Logged out"));}
     if(method.equals("POST")&&path.equals("/api/password"))return json(200,auth.changePassword(c,u,b));
