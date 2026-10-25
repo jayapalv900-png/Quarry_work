@@ -1,0 +1,49 @@
+// Add this field INSIDE AuthService, alongside its existing maps:
+private final Map<String, Long> registrationNext = new ConcurrentHashMap<>();
+
+// Add this method INSIDE AuthService, not inside another method:
+public Map<String, Object> register(
+        Connection c,
+        Map<String, Object> b,
+        String client
+) throws Exception {
+    long now = System.currentTimeMillis();
+    registrationNext.entrySet().removeIf(e -> e.getValue() <= now);
+    Long next = registrationNext.get(client);
+    if (next != null && next > now) {
+        throw new ApiError(429, "Wait one minute before trying registration again.");
+    }
+    registrationNext.put(client, now + 60_000L);
+
+    if (b.containsKey("role") && !"Customer".equals(b.get("role"))) {
+        throw new ApiError(403, "Public registration is for Customer accounts only.");
+    }
+
+    String name = required(b, "name");
+    String username = required(b, "username");
+    if (name.length() > 100) {
+        throw ApiError.bad("Name must have at most 100 characters.");
+    }
+    if (!username.matches("[A-Za-z0-9_.-]{3,40}")) {
+        throw ApiError.bad("Username: use 3–40 letters, numbers, dots, underscores or hyphens.");
+    }
+
+    Object rawPassword = b.get("password");
+    Object rawConfirm = b.get("confirmPassword");
+    if (!(rawPassword instanceof String) || !(rawConfirm instanceof String)) {
+        throw ApiError.bad("Enter and confirm your password.");
+    }
+    String password = (String) rawPassword;
+    Passwords.validate(password);
+    if (!password.equals(rawConfirm)) {
+        throw ApiError.bad("Passwords do not match.");
+    }
+
+    if (first(c, "SELECT id FROM users WHERE username=?", username) != null) {
+        throw ApiError.bad("Username is unavailable. Choose another.");
+    }
+
+    // Never take a privileged role from an unauthenticated request.
+    addUser(c, name, username, password, "Customer");
+    return msg("Account created successfully. You can now sign in.");
+}

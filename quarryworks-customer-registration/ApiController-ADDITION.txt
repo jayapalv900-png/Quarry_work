@@ -1,0 +1,6 @@
+// In ApiController.java, INSIDE db.transaction(c -> {...}), insert this
+// AFTER the existing public /api/login check and BEFORE auth.user(...):
+
+if (method.equals("POST") && path.equals("/api/register")) {
+    return json(201, auth.register(c, b, req.getRemoteAddr()));
+}

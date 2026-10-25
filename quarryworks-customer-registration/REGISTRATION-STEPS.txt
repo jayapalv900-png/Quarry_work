@@ -1,0 +1,22 @@
+CUSTOMER REGISTRATION ADDITION — QuarryWorks 2.0
+1. Copy register.html into src/main/resources/static/ beside index.html and styles.css.
+2. Add the field and method from AuthService-ADDITION.txt inside AuthService.java.
+   The existing imports already include Map, ConcurrentHashMap, Connection,
+   Database.* and Values.*. Do not replace AuthService.java with this snippet.
+3. Add the ApiController snippet before auth.user(c, authorization), inside
+   the existing transaction lambda. Otherwise registration will require login.
+4. In index.html, immediately after the login form, add:
+   <p><a href="/register.html">New customer? Create an account</a></p>
+5. Replace the old login hint that says all customers need Administrator creation.
+   New hint: Customers can register. Staff accounts are created by the administrator.
+6. Build and test locally. Commit intended source changes and push. Redeploy Render.
+7. Create a new Customer, log in, and verify it cannot access Manager/Admin APIs.
+8. Try POST /api/register with role Manager: must return 403 (wait 60s between tests).
+9. Duplicate username must fail; mismatched passwords must fail; no plaintext password
+   should appear in the database, logs, URL or GitHub.
+No database migration needed; uses existing users table and Passwords.hash.
+One attempt per minute per client IP, held in memory. Shared IP users share limit;
+restart clears limit. Behind proxies, actual client identification must be reviewed.
+Not email verification, CAPTCHA, approval workflow or full abuse protection.
+This code was not Java-compiled or tested against a running server here.
+Frontend JavaScript syntax checked. Back up changed files before applying.
