@@ -1,0 +1,10 @@
+Align your diagrams with this implementation:
+1. Remove unrelated Course and AIRecommendation classes.
+2. One Manager, many Customers and Workers; user records distinguish individuals.
+3. SQLite database is a file inside the application server, not a separate server.
+4. One stone per Order; no OrderItem collection in this version.
+5. Payment is simulated, with success/failure paths. No third-party service exists.
+6. Worker production quality Pass updates stock; Fail does not.
+7. Include order cancellation, dispatch, incidents, attendance and maintenance.
+8. Weighbridge is a manual calculator, not connected physical hardware.
+9. CSV reports and browser-print invoices are available, not PDF generation APIs.

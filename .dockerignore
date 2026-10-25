@@ -1,0 +1,17 @@
+target
+data
+demo-data
+test-data
+deployment-test-data
+update-backups
+.git
+.idea
+
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+
+.env
+.env.*
+*.log

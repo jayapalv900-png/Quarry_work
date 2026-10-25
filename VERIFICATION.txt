@@ -1,0 +1,9 @@
+pom_xml: valid
+frontend_javascript_syntax: passed node --check
+textarea_form_regression: passed in minimal simulated DOM (not a browser)
+sqlite_schema_statements: 9
+single_manager_constraint: passed SQLite check
+negative_inventory_constraint: passed SQLite check
+java_compilation: NOT RUN: no JDK/compiler in generation environment
+maven_junit_tests: 18 included, NOT RUN
+browser_end_to_end: NOT RUN
